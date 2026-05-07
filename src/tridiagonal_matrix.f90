@@ -27,13 +27,13 @@ module tridiagonal_matrix
 
       allocate(A(3, n), source=0.0_dp)
 
-      read(iunit, *) A(1,1), A(3, 1)
+      read(iunit, *) A(2,1), A(3, 1)
 
       do i = 2,n-1
-        read(iunit, *) A(2, i), A(1, i), A(3, i)
+        read(iunit, *) A(1, i), A(2, i), A(3, i)
       end do
       
-      read(iunit, *) A(2, n), A(1,n)
+      read(iunit, *) A(1, n), A(2,n)
       close(iunit)
 
     end subroutine read_tdmatrix
@@ -45,8 +45,8 @@ module tridiagonal_matrix
 
       n = size(A, 2)
 
-      print *, 'Main diagonal: ', A(1, :)
-      print *, 'Lower diagonal: ', A(2,2:)
+      print *, 'Main diagonal: ', A(2, :)
+      print *, 'Lower diagonal: ', A(1,2:)
       print *, 'Upper diagonal: ', A(3, :n-1)
       
     end subroutine print_matrix
@@ -56,8 +56,8 @@ module tridiagonal_matrix
       real(dp), allocatable, intent(out) :: A(:,:)
       integer, intent(in) :: n
       allocate(A(3, n), source = 0.0_dp)
-      call RANDOM_NUMBER(A(1,:))
-      call RANDOM_NUMBER(A(2,2:n))
+      call RANDOM_NUMBER(A(1,2:n))
+      call RANDOM_NUMBER(A(2,:))
       call RANDOM_NUMBER(A(3,1:n-1))
     end subroutine generate
 
@@ -75,14 +75,14 @@ module tridiagonal_matrix
 
     ! Главная диагональ (C(3,:))
     do i = 1, n
-      C(3,i) = A(1,i) * B(1,i)
-      if (i > 1) C(3,i) = C(3,i) + A(2,i) * B(3,i-1)
-      if (i < n) C(3,i) = C(3,i) + A(3,i) * B(2,i+1)
+      C(3,i) = A(2,i) * B(2,i)
+      if (i > 1) C(3,i) = C(3,i) + A(1,i) * B(3,i-1)
+      if (i < n) C(3,i) = C(3,i) + A(3,i) * B(1,i+1)
     end do
 
     ! Первая наддиагональ (C(4,:))
     do i = 1, n-1
-      C(4,i) = A(1,i) * B(3,i) + A(3,i) * B(1,i+1)
+      C(4,i) = A(2,i) * B(3,i) + A(3,i) * B(2,i+1)
     end do
 
     ! Вторая наддиагональ (C(5,:))
@@ -92,12 +92,12 @@ module tridiagonal_matrix
 
     ! Первая поддиагональ (C(2,:))
     do i = 2, n
-      C(2,i) = A(2,i) * B(1,i-1) + A(1,i) * B(2,i)
+      C(2,i) = A(1,i) * B(2,i-1) + A(2,i) * B(1,i)
     end do
 
     ! Вторая поддиагональ (C(1,:))
     do i = 3, n
-      C(1,i) = A(2,i) * B(2,i-1)
+      C(1,i) = A(1,i) * B(1,i-1)
     end do
   end function tdmatmul
 ! Запись пятидиагональной матрицы в файл
