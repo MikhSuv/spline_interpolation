@@ -25,6 +25,8 @@ program test_spline
     w(i) = 1.0e10_dp              ! большой вес => практически интерполяция
   end do
   ! Можно также добавить слегка зашумлённую точку, чтобы показать устойчивость
+  y(23) = 3
+  w(23) = 1.0e-2_dp
 
   ! ---- Построение сплайна ----
   call interpolate_spline(x, y, w, q, x_out, y_out)
@@ -38,11 +40,14 @@ program test_spline
     integer :: j
     open(unit=10, file="exact.dat", action="write")
     do j = 1, size(x_out)
-      write(10, *) x_out(j), sin(x_out(j))
+      write(10, *) x_out(j), sin(x_out(j)) 
     end do
     close(10)
   end block
 
   print *, "Файлы original.dat, spline.dat, exact.dat созданы."
   call system("gnuplot plot.plt")
+  call generate_data_file("data.dat", 1000, 0.12_dp, 12.0_dp)
+! Файл: generate_data.f90
+! Содержит подпрограмму для записи файла data.dat с зашумлёнными данными
 end program test_spline
