@@ -45,7 +45,11 @@ $(BUILDDIR)/spline_interpolation.o : $(BUILDDIR)/tridiagonal_matrix.o
 $(MAIN_OBJ): $(BUILDDIR)/precision_mod.o $(BUILDDIR)/tridiagonal_matrix.o $(BUILDDIR)/spline_interpolation.o
 $(TEST_OBJ): $(BUILDDIR)/precision_mod.o $(BUILDDIR)/tridiagonal_matrix.o $(BUILDDIR)/spline_interpolation.o
 
-.PHONY: all clean
+.PHONY: all clean plot
+
+plot: $(MAIN_EXE) 
+	./spline_interpolation
+	gnuplot plot.plt
 
 clean:
 	rm -rf $(BUILDDIR) $(MAIN_EXE) $(TEST_EXE)
