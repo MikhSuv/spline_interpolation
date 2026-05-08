@@ -2,9 +2,9 @@ module spline_interpolation
   use precision_mod
   use tridiagonal_matrix, only: tdmatmul
   implicit none
-  ! private
+   private
 
-  ! public ::
+   public :: read_data, interpolate_spline, write_spline
 contains
 
   subroutine read_data(filename, X, Y, P)
